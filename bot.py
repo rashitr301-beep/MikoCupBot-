@@ -1,36 +1,26 @@
 import telebot
-import os
 import random
+import os
 
 TOKEN = os.getenv("TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
-players = []
-current_question = None
-current_answer = None
-
-questions = [
-    ("Кто выиграл ЧМ 2018?", "Франция"),
-    ("Кто больше выиграл ЛЧ: Real Madrid или Barcelona?", "Real Madrid"),
-    ("Кто из них португалец: Messi или Ronaldo?", "Ronaldo"),
+teams = [
+    "Барселона",
+    "Реал Мадрид"
 ]
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, "⚽ Добро пожаловать в Miko Cup!\nНапиши /join чтобы участвовать")
+    bot.send_message(message.chat.id, "Привет! Нажми /game чтобы начать игру ⚽")
 
-@bot.message_handler(commands=['join'])
-def join(message):
-    if message.from_user.id not in players:
-        players.append(message.from_user.id)
-        bot.reply_to(message, "✅ Ты зарегистрирован!")
-    else:
-        bot.reply_to(message, "Ты уже в игре!")
+@bot.message_handler(commands=['game'])
+def game(message):
+    team1 = random.choice(teams)
+    team2 = random.choice(teams)
+    while team1 == team2:
+        team2 = random.choice(teams)
 
-@bot.message_handler(commands=['startcup'])
-def startcup(message):
-    global current_question, current_answer
-    if len(players) < 2:
-        bot.reply_to(message, "Нужно минимум 2 игрока!")
-        return
-    q = random.choice(questions)
+    bot.send_message(message.chat.id, f"Кто победит?\n1️⃣ {team1}\n2️⃣ {team2}")
+
+bot.infinity_polling()
