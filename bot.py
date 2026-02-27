@@ -33,4 +33,4 @@ def startcup(message):
     if len(players) < 2:
         bot.reply_to(message, "Нужно минимум 2 игрока!")
         return
-    q = random.choice(["Команда 1", "Команда 2"])
+    q = random.choice(questions)
